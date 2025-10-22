@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyProjectile : EnemyDamage //Will damage the player every time they touch
+public class EnemyProjectile : DeathBox //Will damage the player every time they touch
 {
     [SerializeField] private float speed;
     [SerializeField] private float resetTime;
@@ -22,7 +22,7 @@ public class EnemyProjectile : EnemyDamage //Will damage the player every time t
             gameObject.SetActive(false);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnTriggerEnter2D(Collider2D collision)
     {
         base.OnTriggerEnter2D(collision); //Execute logic from parent script first
         gameObject.SetActive(false); //when this hits any object deactivate arrow

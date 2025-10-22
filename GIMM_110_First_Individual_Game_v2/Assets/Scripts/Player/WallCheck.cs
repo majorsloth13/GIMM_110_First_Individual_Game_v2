@@ -7,25 +7,22 @@ public class WallCheck : MonoBehaviour
     [SerializeField] private LayerMask wallLayers;         // Which layers count as walls
 
     public bool IsTouchingWall { get; private set; }
+    public bool IsTouchingLeftWall { get; private set; }
+    public bool IsTouchingRightWall { get; private set; }
 
     private void Update()
     {
-        // Raycast in the direction the player is facing (based on local scale)
-        IsTouchingWall = Physics2D.Raycast(transform.position, Vector2.right * transform.parent.localScale.x, checkDistance, wallLayers);
+        // Raycast returns RaycastHit2D; check if it hits
+        IsTouchingLeftWall = Physics2D.Raycast(transform.position, Vector2.left, checkDistance, wallLayers).collider != null;
+        IsTouchingRightWall = Physics2D.Raycast(transform.position, Vector2.right, checkDistance, wallLayers).collider != null;
+
+        IsTouchingWall = IsTouchingLeftWall || IsTouchingRightWall;
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * transform.parent.localScale.x * checkDistance);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.right * checkDistance);
+        Gizmos.DrawLine(transform.position, transform.position + Vector3.left * checkDistance);
     }
-
-    public bool IsTouchingWall()
-    {
-        return Physics2D.OverlapCircle(transform.position, checkRadius, wallLayers);
-    }
-
-    public bool IsTouchingRightWall => Physics2D.Raycast(transform.position, Vector2.right, checkDistance, wallLayers);
-    public bool IsTouchingLeftWall => Physics2D.Raycast(transform.position, Vector2.left, checkDistance, wallLayers);
-
 }

@@ -6,7 +6,7 @@ public class DeathBox : MonoBehaviour
 {
     [SerializeField] private float damageAmount = 999f; // Enough to kill the player
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("you are dead");
 

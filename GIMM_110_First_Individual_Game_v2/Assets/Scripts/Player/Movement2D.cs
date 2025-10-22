@@ -21,7 +21,7 @@ public class Movement2D : MonoBehaviour
     [Header("Sprite")]
     public SpriteRenderer sprite;       // SpriteRenderer for flipping player based on direction
 
-    private Rigidbody2D rb;             // Cached reference to Rigidbody2D
+    protected Rigidbody2D rb;             // Cached reference to Rigidbody2D
     private float movement;             // Horizontal input (-1, 0, 1)
     private float jumpBufferCounter;    // Timer to track buffered jump input
     private float lastTimeGrounded;     // Timestamp of the last time player was grounded

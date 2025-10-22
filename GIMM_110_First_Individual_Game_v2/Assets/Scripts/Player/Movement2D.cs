@@ -43,7 +43,7 @@ public class Movement2D : MonoBehaviour
         sprite = GetComponent<SpriteRenderer>();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         // Read horizontal input each frame (-1 for left, 1 for right)
         movement = Input.GetAxisRaw("Horizontal");

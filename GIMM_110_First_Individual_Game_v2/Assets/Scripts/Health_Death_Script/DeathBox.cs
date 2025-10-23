@@ -8,11 +8,12 @@ public class DeathBox : MonoBehaviour
 
     protected virtual void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("you are dead");
+        
 
         // Check if the colliding object is the player
         if (other.CompareTag("Player"))
         {
+            Debug.Log("you are dead");
             // Try to get the Health component from the player
             Health playerHealth = other.GetComponent<Health>();
             if (playerHealth != null)

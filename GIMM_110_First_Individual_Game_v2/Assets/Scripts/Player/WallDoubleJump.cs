@@ -1,78 +1,137 @@
 using UnityEngine;
 
+/// <summary>
+/// Adds double jump and wall jump functionality to Movement2D.
+/// Uses a single raycast-based WallCheck.
+/// </summary>
 public class WallDoubleJump : Movement2D
 {
-    [Header("Double Jump Settings")]
+    [Header("Jump Settings")]
     public int extraJumps = 1;
     private int jumpsLeft;
 
     [Header("Wall Jump Settings")]
+    public float wallCheckDistance = 1f;
+    public float wallSlideSpeed = 2f;
+    public float wallJumpForce = 15f;
+    public float wallJumpPush = 10f;
+    public float wallJumpLockTime = 0.15f; // Prevents instant re-stick
+
+    [Header("References")]
     public Transform wallCheck;
     public LayerMask wallLayer;
-    public float wallJumpHorizontalForce = 6f;
-    public float wallJumpVerticalForce = 16f;
-    public float checkRadius = 0.2f;
-
-    [Header("Wall Slide Settings")]
-    public float wallSlideSpeed = 2f;
 
     private bool isTouchingWall;
+    private bool isTouchingLeftWall;
+    private bool isTouchingRightWall;
     private bool isWallSliding;
+    private bool wallJumping;
+    private float wallJumpLockCounter;
 
     protected override void Update()
     {
         base.Update();
 
-        // Grounded resets jumps
-        if (isGrounded)
-            jumpsLeft = extraJumps;
+        if (wallJumping)
+        {
+            wallJumpLockCounter -= Time.deltaTime;
+            if (wallJumpLockCounter <= 0)
+                wallJumping = false;
+        }
 
-        // Check for wall contact
-        isTouchingWall = Physics2D.OverlapCircle(wallCheck.position, checkRadius, wallLayer);
-
+        CheckWall();
         HandleWallSlide();
-        HandleWallJump();
-        HandleDoubleJump();
+        HandleExtraJump();
     }
 
+    /// <summary>
+    /// Checks both sides for walls using raycasts.
+    /// </summary>
+    private void CheckWall()
+    {
+        if (wallJumping)
+        {
+            // Don't check during lock
+            isTouchingWall = isTouchingLeftWall = isTouchingRightWall = false;
+            return;
+        }
+
+        // Check left and right separately
+        RaycastHit2D leftHit = Physics2D.Raycast(wallCheck.position, Vector2.left, wallCheckDistance, wallLayer);
+        RaycastHit2D rightHit = Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, wallLayer);
+
+        isTouchingLeftWall = leftHit.collider != null;
+        isTouchingRightWall = rightHit.collider != null;
+        isTouchingWall = isTouchingLeftWall || isTouchingRightWall;
+
+        Debug.DrawRay(wallCheck.position, Vector2.left * wallCheckDistance, isTouchingLeftWall ? Color.green : Color.red);
+        Debug.DrawRay(wallCheck.position, Vector2.right * wallCheckDistance, isTouchingRightWall ? Color.green : Color.red);
+    }
+
+    /// <summary>
+    /// Handles wall sliding and jumping away from walls.
+    /// </summary>
     private void HandleWallSlide()
     {
-        // Apply wall slide if touching wall and not grounded
-        if (isTouchingWall && !isGrounded)
+        if (isTouchingWall && !isGrounded && rb.linearVelocity.y < 0f)
         {
             isWallSliding = true;
-
-            // Only clamp downward speed
-            if (rb.linearVelocity.y < -wallSlideSpeed)
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, -wallSlideSpeed);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
         }
         else
         {
             isWallSliding = false;
         }
-    }
 
-
-    private void HandleWallJump()
-    {
-        // Wall jump occurs when touching wall and pressing jump
-        if (Input.GetKeyDown(KeyCode.Space) && isWallSliding)
+        // Jump away from whichever side we're touching
+        if (isWallSliding && Input.GetKeyDown(KeyCode.Space))
         {
-            float direction = -Mathf.Sign(transform.localScale.x); // push away from wall
-            rb.linearVelocity = new Vector2(direction * wallJumpHorizontalForce, wallJumpVerticalForce);
-            isWallSliding = false;
-            jumpsLeft = extraJumps; // reset double jump after wall jump
+            float jumpDirection = 0f;
+
+            if (isTouchingLeftWall)
+                jumpDirection = 1f; // Jump right
+            else if (isTouchingRightWall)
+                jumpDirection = -1f; // Jump left
+
+            // Apply jump velocity away from wall
+            //rb.linearVelocity = new Vector2(wallJumpPush * jumpDirection, wallJumpForce);
+
+            //Adds instant force in the direction of the opposite wall
+            rb.AddForce(wallJumpPush * (isTouchingLeftWall ? Vector2.right : Vector2.left), ForceMode2D.Impulse);
+
+            // Face away from wall
+            if (jumpDirection != 0)
+                sprite.flipX = jumpDirection < 0;
+
+            // Lock re-sticking for a short time
+            wallJumping = true;
+            wallJumpLockCounter = wallJumpLockTime;
+
+            // Reset double jumps
+            jumpsLeft = extraJumps;
         }
     }
 
-    private void HandleDoubleJump()
+    /// <summary>
+    /// Handles ground and double jump behavior.
+    /// </summary>
+    private void HandleExtraJump()
     {
-        // Only allow double jump if in air and not touching wall
-        if (Input.GetKeyDown(KeyCode.Space) && !isGrounded && !isWallSliding && jumpsLeft > 0)
+        if (isGrounded)
+            jumpsLeft = extraJumps;
+
+        if (Input.GetKeyDown(KeyCode.Space) && jumpsLeft > 0 && !isGrounded && !isWallSliding)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f); // reset vertical velocity
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             jumpsLeft--;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (wallCheck == null) return;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(wallCheck.position, wallCheck.position + Vector3.right * wallCheckDistance);
+        Gizmos.DrawLine(wallCheck.position, wallCheck.position + Vector3.left * wallCheckDistance);
     }
 }

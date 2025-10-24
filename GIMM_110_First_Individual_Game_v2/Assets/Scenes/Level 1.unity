@@ -506,7 +506,7 @@ GameObject:
   m_Component:
   - component: {fileID: 191880130}
   - component: {fileID: 191880131}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: RespawnManager
   m_TagString: Untagged
   m_Icon: {fileID: -5487077368411116049, guid: 0000000000000000d000000000000000, type: 0}
@@ -521,12 +521,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 191880129}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.13, y: -3.14, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.08048779, y: -0.4251976, z: 0}
+  m_LocalScale: {x: 1.2195122, y: 0.7874016, z: 0.562082}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1823002351}
+  m_Father: {fileID: 389734757}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &191880131
 MonoBehaviour:
@@ -849,12 +849,13 @@ Transform:
   m_GameObject: {fileID: 389734755}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -30.746, y: -10.7, z: 0}
+  m_LocalPosition: {x: -29.93, y: -10.43, z: 0}
   m_LocalScale: {x: 0.82, y: 1.27, z: 1.7791}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 698299619}
   - {fileID: 1282423071}
+  - {fileID: 191880130}
   m_Father: {fileID: 1581880339}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &389734758
@@ -2516,6 +2517,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1079852543}
   - component: {fileID: 1079852545}
+  - component: {fileID: 1079852546}
   m_Layer: 0
   m_Name: CheckPoint
   m_TagString: Checkpoint
@@ -2532,7 +2534,7 @@ Transform:
   m_GameObject: {fileID: 1079852542}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 26.29, y: 4.85, z: 0}
+  m_LocalPosition: {x: 66.03, y: 12.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2584,6 +2586,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &1079852546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079852542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2f79a7afd6d92c49bf312d7fde907c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActivated: 0
 --- !u!1 &1088114506
 GameObject:
   m_ObjectHideFlags: 0
@@ -3508,7 +3523,7 @@ Transform:
   m_GameObject: {fileID: 1455508465}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.18, y: 2.4272, z: 0}
+  m_LocalPosition: {x: 3.18, y: 5.53, z: 0}
   m_LocalScale: {x: 1, y: 12.384553, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4454,7 +4469,6 @@ Transform:
   - {fileID: 523395414}
   - {fileID: 1721098484}
   - {fileID: 34431617}
-  - {fileID: 191880130}
   - {fileID: 22491278}
   - {fileID: 1079852543}
   m_Father: {fileID: 0}

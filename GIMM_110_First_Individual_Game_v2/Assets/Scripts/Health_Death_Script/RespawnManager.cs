@@ -1,68 +1,88 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RespawnManager : MonoBehaviour
 {
-    public Transform player;                     // Reference to the player's transform
-    private Vector3 spawnPoint;                  // Position to respawn the player at
-    private Health playerHealth;                 // Reference to the player's Health component
+    [Header("Player References")]
+    public Transform player;                     // Reference to the player
+    private Vector3 spawnPoint;                  // Player's respawn position
+    private Health playerHealth;                 // Reference to player's Health component
 
-    [SerializeField] private float respawnDelay = 1f; // Time to wait before respawning
+    [Header("Settings")]
+    [SerializeField] private float respawnDelay = 1f; // Time before player respawns
+    [SerializeField] private string checkpointTag = "Checkpoint"; // Tag for checkpoint objects
+    [SerializeField] private string deathBoxTag = "Deathbox";   // Tag for death zones
 
     private void Start()
     {
         if (player != null)
         {
-            spawnPoint = player.position;                // Set initial spawn point to player's starting position
-            playerHealth = player.GetComponent<Health>(); // Cache the Health component for later use
+            spawnPoint = player.position;                 // Initial spawn point
+            playerHealth = player.GetComponent<Health>(); // Cache Health component
+        }
+        else
+        {
+            Debug.LogWarning("Player not assigned to RespawnManager!");
         }
     }
 
     /// <summary>
-    /// Updates the player's spawn point to a new position.
+    /// Called by checkpoint objects to update the player's respawn point.
     /// </summary>
     public void SetSpawnPoint(Vector3 newSpawnPoint)
     {
         spawnPoint = newSpawnPoint;
+        Debug.Log("New checkpoint set at: " + spawnPoint);
     }
 
     /// <summary>
-    /// Public method to initiate the respawn sequence.
+    /// Called externally when player dies or hits a death zone.
     /// </summary>
     public void RespawnPlayer()
     {
-        StartCoroutine(RespawnCoroutine());  // Start the coroutine to handle delayed respawn
+        StartCoroutine(RespawnCoroutine());
+    }
+
+    private IEnumerator RespawnCoroutine()
+    {
+        yield return new WaitForSeconds(respawnDelay);
+
+        // Move player to saved checkpoint
+        player.position = spawnPoint;
+
+        // Reset health if applicable
+        if (playerHealth != null)
+            playerHealth.ResetHealth();
+
+        // Re-enable movement after respawn
+        Movement2D movement = player.GetComponent<Movement2D>();
+        if (movement != null)
+            movement.enabled = true;
+
+        // Trigger respawn animation if animator exists
+        Animator anim = player.GetComponent<Animator>();
+        if (anim != null)
+            anim.SetTrigger("respawn");
+
+        Debug.Log("Player respawned at: " + spawnPoint);
     }
 
     /// <summary>
-    /// Handles the delay, repositioning, and reactivation logic for the player's respawn.
+    /// Detects checkpoint or death zone collisions automatically.
+    /// Attach this script to an object with a collider (e.g., the player).
     /// </summary>
-    private IEnumerator RespawnCoroutine()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        yield return new WaitForSeconds(respawnDelay); // Wait before respawning
-
-        // Reset player position to saved spawn point
-        player.position = spawnPoint;
-
-        // Reset health and death status
-        if (playerHealth != null)
+        // Save new checkpoint
+        if (collision.CompareTag(checkpointTag))
         {
-            playerHealth.ResetHealth();
+            SetSpawnPoint(collision.transform.position);
         }
 
-        // Re-enable movement if it was disabled on death
-        Movement2D movement = player.GetComponent<Movement2D>();
-        if (movement != null)
+        // Handle death zone
+        if (collision.CompareTag(deathBoxTag))
         {
-            movement.enabled = true;
-        }
-
-        // Trigger respawn animation if Animator is available
-        Animator anim = player.GetComponent<Animator>();
-        if (anim != null)
-        {
-            anim.SetTrigger("respawn");
+            RespawnPlayer();
         }
     }
 }

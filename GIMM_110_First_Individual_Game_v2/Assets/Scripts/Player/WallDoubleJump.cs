@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class WallDoubleJump : Movement2D
 {
-    [Header("Jump Settings")]
+    /*[Header("Jump Settings")]
     public int extraJumps = 1;
     private int jumpsLeft;
 
@@ -27,6 +27,11 @@ public class WallDoubleJump : Movement2D
     private bool isWallSliding;
     private bool wallJumping;
     private float wallJumpLockCounter;
+
+    private void Start()
+    {
+        //prevSpeed = moveSpeed;
+    }
 
     protected override void Update()
     {
@@ -68,6 +73,8 @@ public class WallDoubleJump : Movement2D
         Debug.DrawRay(wallCheck.position, Vector2.right * wallCheckDistance, isTouchingRightWall ? Color.green : Color.red);
     }
 
+    float prevSpeed;
+
     /// <summary>
     /// Handles wall sliding and jumping away from walls.
     /// </summary>
@@ -75,12 +82,17 @@ public class WallDoubleJump : Movement2D
     {
         if (isTouchingWall && !isGrounded && rb.linearVelocity.y < 0f)
         {
+            print("wall sliding");
             isWallSliding = true;
+            //prevSpeed = movement;
+            //moveSpeed = 0f;
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
         }
         else
         {
+            print(rb);
             isWallSliding = false;
+            //moveSpeed = prevSpeed;
         }
 
         // Jump away from whichever side we're touching
@@ -133,5 +145,5 @@ public class WallDoubleJump : Movement2D
         Gizmos.color = Color.yellow;
         Gizmos.DrawLine(wallCheck.position, wallCheck.position + Vector3.right * wallCheckDistance);
         Gizmos.DrawLine(wallCheck.position, wallCheck.position + Vector3.left * wallCheckDistance);
-    }
+    }*/
 }

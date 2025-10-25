@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WallJump : Movement2D
 {
-    [Header("Wall Jump Settings")]
+    /*[Header("Wall Jump Settings")]
     public Transform wallCheck;           // position to check for walls
     public LayerMask wallLayer;
     public float checkRadius = 0.2f;
@@ -71,5 +71,5 @@ public class WallJump : Movement2D
             wallJumped = false;
     }
 
-    public bool IsTouchingWall => isTouchingWall;
+    public bool IsTouchingWall => isTouchingWall;*/
 }

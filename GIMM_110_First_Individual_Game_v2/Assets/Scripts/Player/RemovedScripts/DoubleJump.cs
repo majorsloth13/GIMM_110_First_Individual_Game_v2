@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DoubleJump : WallJump
 {
-    [Header("Double Jump Settings")]
+    /*[Header("Double Jump Settings")]
     public int extraJumps = 1;
 
     private int jumpsLeft;
@@ -22,5 +22,5 @@ public class DoubleJump : WallJump
             rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
             jumpsLeft--;
         }
-    }
+    }*/
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class CoinGameController : MonoBehaviour
 {
-    private List<Coin> tempBag = new List<Coin>(); //Temporary holding bag
+    /*private List<Coin> tempBag = new List<Coin>(); //Temporary holding bag
     private List<Star> tempoBag = new List<Star>(); //Temporary holding bag
     private CoinCollecter collector = new CoinCollecter();
 
@@ -53,5 +53,5 @@ public class CoinGameController : MonoBehaviour
         {
             collector.DisplayTotals();
         }
-    }
+    }*/
 }

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
+using static UnityEngine.LightAnchor;
 
 public class Movement2D : MonoBehaviour
 {
+    private enum WallSide { None, Left, Right }
     [Header("Movement Variables")]
     public float moveSpeed = 10f;        // Base horizontal movement speed
     private float baseMoveSpeed;         // Stores original move speed (for resetting after dash)
@@ -21,7 +24,7 @@ public class Movement2D : MonoBehaviour
     [Header("Sprite")]
     public SpriteRenderer sprite;       // SpriteRenderer for flipping player based on direction
 
-    protected Rigidbody2D rb;             // Cached reference to Rigidbody2D
+    public Rigidbody2D rb;             // Cached reference to Rigidbody2D
     private float movement;             // Horizontal input (-1, 0, 1)
     private float jumpBufferCounter;    // Timer to track buffered jump input
     private float lastTimeGrounded;     // Timestamp of the last time player was grounded
@@ -29,6 +32,29 @@ public class Movement2D : MonoBehaviour
 
     private MovingPlatforms currentPlatform; // Reference to current platform (if standing on one)
     public bool isGrounded { get; private set; } // Is the player currently grounded?
+
+
+    [Header("Jump Settings")]
+    public int extraJumps = 1;
+    private int jumpsLeft;
+
+    [Header("Wall Jump Settings")]
+    public float wallCheckDistance = 1f;
+    public float wallSlideSpeed = 2f;
+    public float wallJumpForce = 15f;
+    public float wallJumpPush = 10f;
+    public float wallJumpLockTime = 0.15f; // Prevents instant re-stick
+
+    [Header("References")]
+    public Transform wallCheck;
+    public LayerMask wallLayer;
+
+    private bool isTouchingWall;
+    private bool isTouchingLeftWall;
+    private bool isTouchingRightWall;
+    private bool isWallSliding;
+    private bool wallJumping;
+    private float wallJumpLockCounter;
 
     private void Start()
     {
@@ -41,9 +67,11 @@ public class Movement2D : MonoBehaviour
 
         // Automatically get the SpriteRenderer if not set
         sprite = GetComponent<SpriteRenderer>();
+        jumpsLeft = extraJumps;
     }
 
-    protected virtual void Update()
+    bool jumpBuffering;
+    private void Update()
     {
         // Read horizontal input each frame (-1 for left, 1 for right)
         movement = Input.GetAxisRaw("Horizontal");
@@ -54,27 +82,51 @@ public class Movement2D : MonoBehaviour
         // Check whether player is on the ground
         isGrounded = groundCheck.IsGrounded();
 
-        // Handle jump input buffering
-        if (Input.GetKeyDown(KeyCode.Space))
-            jumpBufferCounter = jumpBufferTime;
-        else
-            jumpBufferCounter -= Time.deltaTime;
-
-        // Track when the player was last grounded
         if (isGrounded)
-            lastTimeGrounded = Time.time;
+            jumpsLeft = extraJumps;
 
-        // Allow jump if buffer is active and within coyote time
-        if (jumpBufferCounter > 0f && Time.time - lastTimeGrounded <= coyoteTime)
+        WallSide side = GetWallJump();
+        if (side != WallSide.None && !isGrounded && !jumpBuffering)
         {
-            jumpRequested = true;      // Set flag for FixedUpdate to process
-            jumpBufferCounter = 0f;    // Reset jump buffer
+            print("wall sliding");
+            moveSpeed = 0f;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                int preDirection = 0;
+                if (side == WallSide.Left)
+                    preDirection = 1;
+                else
+                    preDirection = -1;
+
+                if (movement == preDirection && movement != 0f)
+                {
+                    print("jump to other wall");
+                    StartCoroutine(JumpBuffer());
+                    rb.linearVelocityY = 0f;
+                    rb.AddForce(wallJumpPush /** (side == WallSide.Left ? Vector2.right : Vector2.left)*/ * Vector2.up, ForceMode2D.Impulse);
+
+                    // Face away from wall
+                    sprite.flipX = preDirection != 1;
+                }
+            }
         }
+        else if (Input.GetKeyDown(KeyCode.Space) && jumpsLeft > 0 && !jumpBuffering)
+        {
+            StartCoroutine(JumpBuffer());
+            print("jump reg");
+            moveSpeed = baseMoveSpeed;
+            rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
+            jumpsLeft--;
+        }
+        else
+            moveSpeed = baseMoveSpeed;
     }
 
     private void FixedUpdate()
     {
-        // Calculate platform's velocity if standing on one
+        //= Calculate platform's velocity if standing on one
         Vector2 platformVelocity = Vector2.zero;
         if (isGrounded && currentPlatform != null)
             platformVelocity = currentPlatform.CurrentVelocity;
@@ -83,12 +135,12 @@ public class Movement2D : MonoBehaviour
         float targetX = movement * moveSpeed + platformVelocity.x;
         rb.linearVelocity = new Vector2(targetX, rb.linearVelocity.y);
 
-        // Apply jump (only if jump was requested)
+        /*7 Apply jump (only if jump was requested)
         if (jumpRequested)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             jumpRequested = false; // Clear jump flag
-        }
+        }*/
     }
 
     // Detect if player lands on a moving platform
@@ -125,5 +177,28 @@ public class Movement2D : MonoBehaviour
     public void ResetSpeed()
     {
         moveSpeed = baseMoveSpeed;
+    }
+
+    WallSide GetWallJump()
+    {
+        WallSide side = WallSide.None;
+        if (Physics2D.Raycast(wallCheck.position, Vector2.left, wallCheckDistance, wallLayer).collider != null)
+           side = WallSide.Left;
+        else if (Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, wallLayer).collider != null)
+            side = WallSide.Right;
+        else
+            side = WallSide.None;
+
+        Debug.DrawRay(wallCheck.position, Vector2.left * wallCheckDistance, side == WallSide.Left ? Color.green : Color.red);
+        Debug.DrawRay(wallCheck.position, Vector2.right * wallCheckDistance, side == WallSide.Right ? Color.green : Color.red);
+
+        return side;
+    }
+
+    IEnumerator JumpBuffer()
+    {
+        jumpBuffering = true;
+        yield return new WaitForSeconds(jumpBufferTime);
+        jumpBuffering = false;
     }
 }

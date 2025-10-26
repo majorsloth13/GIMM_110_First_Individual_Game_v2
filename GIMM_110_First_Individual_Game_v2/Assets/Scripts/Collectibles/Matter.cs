@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Matter
+public class Matter : MonoBehaviour
 {
     //Private variable {Encapsulation}
     private int coinValue;

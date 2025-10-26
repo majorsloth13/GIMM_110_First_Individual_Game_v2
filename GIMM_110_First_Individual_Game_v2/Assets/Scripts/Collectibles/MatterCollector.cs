@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class CoinCollecter
+public class MatterCollector : MonoBehaviour
 {
     private List<Matter> collectedMatter = new List<Matter>();
 
@@ -15,17 +15,18 @@ public class CoinCollecter
     //Count how many of each coin type there are
     public void DisplayTotals()
     {
-        int matterCount = 0;
+        int darkMatterCount = 0;
  
 
         foreach (Matter matter in collectedMatter)
         {
-            if (matter is DarkMatter) matterCount++;
+            if (matter is DarkMatter) darkMatterCount++;
         }
 
         Debug.Log("------ Totals ------");
-        Debug.Log("Dark Matter: " + matterCount);
+        Debug.Log("Dark Matter: " + darkMatterCount);
         Debug.Log("-------------------------");
 
     }
+
 }

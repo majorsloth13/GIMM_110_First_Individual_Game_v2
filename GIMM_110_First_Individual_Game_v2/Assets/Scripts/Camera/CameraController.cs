@@ -2,26 +2,20 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    //Room camera
-    [SerializeField] private float speed;
-    private float currentPosX;
-    private Vector3 velocity = Vector3.zero;
-
-    //follow player
-    [SerializeField] private Transform player;
-    [SerializeField] private float aheadDistance;
-    [SerializeField] private float cameraSpeed;
-    [SerializeField] private float cameraZoom;
+    [Header("Follow Player")]
+    [SerializeField] private Transform player;      // Player to follow
+    [SerializeField] private float aheadDistance = 2f; // How far ahead the camera looks horizontally
+    [SerializeField] private float upDistance = 1f;    // How far ahead the camera looks vertically
+    [SerializeField] private float cameraSpeed = 3f;   // How quickly camera follows
     private float lookAhead;
+    private float lookUp;
 
-    // Zoom
-    [Header("Camera Distance")]
-    [SerializeField] private float cameraDistance = 8f;
+    [Header("Zoom")]
+    [SerializeField] private float cameraDistance = 8f; // Orthographic camera zoom distance
     private Camera cam;
 
     private void Start()
     {
-        // Cache the Camera component
         cam = GetComponent<Camera>();
         if (cam == null)
         {
@@ -29,32 +23,37 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            // Set the initial orthographic size based on cameraDistance
-            cam.orthographic = true; // Ensure we're in 2D mode
+            cam.orthographic = true;
             cam.orthographicSize = cameraDistance;
         }
     }
 
-    // Update is called once per frame
     private void Update()
     {
-        //Room camera
-        //transform.position = Vector3.SmoothDamp(transform.position, new Vector3(currentPosX, transform.position.y, transform.position.z), ref velocity, speed);
+        if (player == null) return;
 
-        //follow player
-        transform.position = new Vector3(player.position.x + lookAhead, transform.position.y, transform.position.z);
-        lookAhead = Mathf.Lerp(lookAhead, (aheadDistance * player.localScale.x), Time.deltaTime * cameraSpeed);
+        // Smooth look-ahead horizontally (based on facing direction)
+        lookAhead = Mathf.Lerp(lookAhead, aheadDistance * player.localScale.x, Time.deltaTime * cameraSpeed);
 
-        //allow real-time camera zooming if cameraDistance changes at runtime
+        // Smooth vertical follow
+        lookUp = Mathf.Lerp(lookUp, upDistance * player.localScale.y, Time.deltaTime * cameraSpeed);
+
+        // Update camera position (combine X and Y)
+        Vector3 targetPos = new Vector3(
+            player.position.x + lookAhead,
+            player.position.y + lookUp,
+            transform.position.z
+        );
+
+        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * cameraSpeed);
+
+        // Allow runtime zoom
         if (cam != null)
-        {
             cam.orthographicSize = cameraDistance;
-        }
     }
 
-
-    public void MoveToNewRoom(Transform _newRoom)
+    public void MoveToNewRoom(Transform newRoom)
     {
-        currentPosX = _newRoom.position.x;
+        transform.position = new Vector3(newRoom.position.x, newRoom.position.y, transform.position.z);
     }
 }

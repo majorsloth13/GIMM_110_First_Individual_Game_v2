@@ -49,15 +49,22 @@ public class Movement2D : MonoBehaviour
     public Transform wallCheck;
     public LayerMask wallLayer;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+
     private bool isTouchingWall;
     private bool isTouchingLeftWall;
     private bool isTouchingRightWall;
     private bool isWallSliding;
     private bool wallJumping;
+    private bool wasTouchingWall; // tracks if we were on a wall last frame
     private float wallJumpLockCounter;
 
     private void Start()
     {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed; // Store initial move speed for reset purposes
 
@@ -81,6 +88,8 @@ public class Movement2D : MonoBehaviour
 
         // Check whether player is on the ground
         isGrounded = groundCheck.IsGrounded();
+
+        HandleRunAnimation();
 
         if (isGrounded)
             jumpsLeft = extraJumps;
@@ -122,6 +131,19 @@ public class Movement2D : MonoBehaviour
         }
         else
             moveSpeed = baseMoveSpeed;
+
+        // Detect if player just left a wall
+        bool currentlyTouchingWall = (side != WallSide.None);
+
+        // If we were touching a wall last frame but aren't anymore → reset double jumps
+        if (wasTouchingWall && !currentlyTouchingWall && !isGrounded)
+        {
+            jumpsLeft = extraJumps;
+            Debug.Log("Left wall — double jump reset!");
+        }
+
+        // Update wall state tracker
+        wasTouchingWall = currentlyTouchingWall;
     }
 
     private void FixedUpdate()
@@ -183,7 +205,7 @@ public class Movement2D : MonoBehaviour
     {
         WallSide side = WallSide.None;
         if (Physics2D.Raycast(wallCheck.position, Vector2.left, wallCheckDistance, wallLayer).collider != null)
-           side = WallSide.Left;
+            side = WallSide.Left;
         else if (Physics2D.Raycast(wallCheck.position, Vector2.right, wallCheckDistance, wallLayer).collider != null)
             side = WallSide.Right;
         else
@@ -201,4 +223,17 @@ public class Movement2D : MonoBehaviour
         yield return new WaitForSeconds(jumpBufferTime);
         jumpBuffering = false;
     }
+
+    private void HandleRunAnimation()
+    {
+        if (animator == null) return;
+
+        // Player is running if moving horizontally and grounded
+        bool run = Mathf.Abs(movement) > 0.1f && isGrounded;
+
+        animator.SetBool("run", run);
+        Debug.Log("run: " + run);
+
+    }
+
 }

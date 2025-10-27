@@ -6,13 +6,14 @@ public class Firetrap : MonoBehaviour
     [SerializeField] private float damage;
 
     [Header("Firetrap Timers")]
-    [SerializeField] private float activationDelay;
-    [SerializeField] private float activeTime;
+    [SerializeField] private float activationDelay = 1f;
+    [SerializeField] private float activeTime = 2f;
+
     private Animator anim;
     private SpriteRenderer spriteRend;
 
-    private bool triggered; //when the trap gets triggered
-    private bool active; // when trap is active and can hurt the player
+    private bool triggered; // when trap gets triggered
+    private bool active;    // when trap is active and can hurt the player
 
     private void Awake()
     {
@@ -22,30 +23,44 @@ public class Firetrap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "Player")
+        TryDamage(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        // Ensure continuous damage if player stays in fire while active
+        TryDamage(collision);
+    }
+
+    private void TryDamage(Collider2D collision)
+    {
+        if (collision.CompareTag("Player") && active)
         {
-            if (!triggered)
-            {
-                StartCoroutine(ActivateFiretrap());
-            }
-            if (active)
-                collision.GetComponent<Health>().TakeDamage(damage);
+            collision.GetComponent<Health>()?.TakeDamage(damage);
+            Debug.Log($"Firetrap damaged player for {damage}");
         }
     }
+
+    // Exposed method to let HybridTrapTrigger activate this trap
+    public void ActivateTrap()
+    {
+        if (!triggered)
+            StartCoroutine(ActivateFiretrap());
+    }
+
     private IEnumerator ActivateFiretrap()
     {
-        //turn the sprite red to notify the player and trigger the trap
         triggered = true;
-        spriteRend.color = Color.red; 
+        spriteRend.color = Color.red;
 
-        //Wait for delay, activatetrap, turn on animation, return color back to normal
         yield return new WaitForSeconds(activationDelay);
-        spriteRend.color = Color.white; //turn the sprite back to its initial color
+
+        spriteRend.color = Color.white;
         active = true;
         anim.SetBool("activated", true);
 
-        //Wait until X seconds, deactivate trap and reset all variables and animator
         yield return new WaitForSeconds(activeTime);
+
         active = false;
         triggered = false;
         anim.SetBool("activated", false);

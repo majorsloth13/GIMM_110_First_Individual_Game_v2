@@ -6,91 +6,69 @@ public class Health : MonoBehaviour
     [SerializeField] private RespawnManager respawnManager; // Reference to the respawn manager for handling player death
 
     [Header("Health")]
-    [SerializeField] private float startingHealth;          // Starting health value set in the Inspector
+    [SerializeField] private float startingHealth = 100f;   // Starting health
     public float currentHealth { get; private set; }        // Public read-only access to current health
 
-    private Animator anim;                                  // Reference to Animator for playing hurt/die animations
-    private bool dead;                                      // Tracks whether the player is already dead
-
-    [Header("iFrames")]
-    [SerializeField] private float iFrameDuration;          // Total duration of invincibility frames (after damage)
-    [SerializeField] private int numberOfFlashes;           // Number of times the sprite flashes during iFrames
-    private SpriteRenderer spriteRend;                      // Reference to the SpriteRenderer for visual feedback
+    private Animator anim;                                  // Animator reference
+    private bool dead;                                      // Tracks death status
+    private SpriteRenderer spriteRend;                      // For visual feedback (optional)
 
     private void Awake()
     {
-        currentHealth = startingHealth;                     // Initialize health at the start
-        anim = GetComponent<Animator>();                    // Cache reference to Animator
-        spriteRend = GetComponent<SpriteRenderer>();        // Cache reference to SpriteRenderer
+        currentHealth = startingHealth;
+        anim = GetComponent<Animator>();
+        spriteRend = GetComponent<SpriteRenderer>();
     }
 
     /// <summary>
     /// Call this to deal damage to the player.
-    /// Triggers hurt animation and invincibility frames if not dead.
     /// </summary>
-    public void TakeDamage(float _damage)
+    public void TakeDamage(float damage)
     {
-        // Subtract damage from current health, clamping between 0 and starting health
-        currentHealth = Mathf.Clamp(currentHealth - _damage, 0, startingHealth);
+        Debug.Log($"{name} took {damage} damage! Called by: {new System.Diagnostics.StackTrace().GetFrame(1).GetMethod().DeclaringType}");
+        if (dead)
+        {
+            Debug.LogWarning("TakeDamage called while already dead!");
+        }
+
+        // Subtract health, clamp between 0 and max
+        currentHealth = Mathf.Clamp(currentHealth - damage, 0, startingHealth);
+        Debug.Log($"Player took {damage} damage. Health: {currentHealth}");
 
         if (currentHealth > 0)
         {
-            anim.SetTrigger("hurt");                        // Trigger hurt animation
-            StartCoroutine(Invulnerability());              // Start invincibility frames
+            // Hurt feedback if still alive
+            anim?.SetTrigger("hurt");
         }
         else
         {
+            // Death sequence
             if (!dead)
             {
-                anim.SetTrigger("die");                     // Trigger death animation
-                GetComponent<Movement2D>().enabled = false; // Disable movement
-                dead = true;                                // Mark as dead to prevent repeat calls
+                dead = true;
+                Debug.Log("Player died.");
 
-                // Handle respawn if manager is assigned
+                anim?.SetTrigger("die");
+
+                // Disable movement temporarily
+                Movement2D move = GetComponent<Movement2D>();
+                if (move != null)
+                    move.enabled = false;
+
+                // Respawn after delay
                 if (respawnManager != null)
-                {
                     respawnManager.RespawnPlayer();
-                }
             }
         }
     }
 
     /// <summary>
-    /// Resets the health back to full and revives the player.
+    /// Fully restores health and revives player.
     /// </summary>
     public void ResetHealth()
     {
         currentHealth = startingHealth;
         dead = false;
-    }
-
-    /// <summary>
-    /// Adds health to the player, clamped to the starting max.
-    /// </summary>
-    public void AddHealth(float _value)
-    {
-        currentHealth = Mathf.Clamp(currentHealth + _value, 0, startingHealth);
-    }
-
-    /// <summary>
-    /// Temporarily disables collisions between player and enemy layers and flashes the sprite.
-    /// </summary>
-    private IEnumerator Invulnerability()
-    {
-        // Ignore collision between player (layer 8) and enemy (layer 9)
-        Physics2D.IgnoreLayerCollision(8, 9, true);
-
-        // Flash the sprite several times
-        for (int i = 0; i < numberOfFlashes; i++)
-        {
-            spriteRend.color = new Color(1, 0, 0, 0.5f);     // Semi-transparent red
-            yield return new WaitForSeconds(iFrameDuration / (numberOfFlashes * 2));
-
-            spriteRend.color = Color.white;                  // Back to normal
-            yield return new WaitForSeconds(iFrameDuration / (numberOfFlashes * 2));
-        }
-
-        // Re-enable collisions
-        Physics2D.IgnoreLayerCollision(8, 9, false);
+        Debug.Log("Player health reset to full.");
     }
 }

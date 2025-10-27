@@ -10,6 +10,7 @@ public class RespawnManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float respawnDelay = 1f; // Time before player respawns
+    [SerializeField] private float idleTransitionDelay = 1.5f; // How long to wait before switching to idle
     [SerializeField] private string checkpointTag = "Checkpoint"; // Tag for checkpoint objects
     [SerializeField] private string deathBoxTag = "Deathbox";   // Tag for death zones
 
@@ -62,7 +63,16 @@ public class RespawnManager : MonoBehaviour
         // Trigger respawn animation if animator exists
         Animator anim = player.GetComponent<Animator>();
         if (anim != null)
+        {
             anim.SetTrigger("respawn");
+            Debug.Log("Player respawned animation triggered.");
+
+            // Wait for animation before transitioning to idle
+            yield return new WaitForSeconds(idleTransitionDelay);
+
+            anim.SetTrigger("idle");
+            Debug.Log("Player transitioned to idle state.");
+        }
 
         Debug.Log("Player respawned at: " + spawnPoint);
     }

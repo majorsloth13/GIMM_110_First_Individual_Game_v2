@@ -3,50 +3,89 @@ using UnityEngine;
 
 public class DashController : MonoBehaviour
 {
-    private Movement2D move;            // Reference to the Movement2D script
-    private bool isDashing = false;     // Tracks whether the player is currently dashing
+    private Movement2D move;            // Reference to Movement2D
+    private Rigidbody2D rb;             // Reference to Rigidbody2D
+    private bool isDashing = false;     // True while player is mid-dash
+    private bool dashOnCooldown = false;// For ground dash cooldown
+    private bool dashUsedInAir = false; // Prevents multiple air dashes until grounded
 
-    [SerializeField] private float dashSpeedBoost = 30f;   // Amount of speed added during dash
-    [SerializeField] private float dashDuration = 0.1f;    // Time the dash effect lasts
-    [SerializeField] private float dashCooldown = 3f;      // Time before another dash can be triggered
+    [Header("Dash Settings")]
+    [SerializeField] private float dashSpeedBoost = 30f;
+    [SerializeField] private float dashDuration = 0.15f;
+    [SerializeField] private float dashCooldown = 2f;
 
-    void Start()
+    private void Start()
     {
-        // Get the Movement2D component attached to the same GameObject
         move = GetComponent<Movement2D>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    void Update()
+    private void Update()
     {
-        // Listen for right mouse button press
+        // Input for dash (Right Mouse Button)
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            // Only allow dash if not currently dashing or in cooldown
-            if (!isDashing)
-            {
-                isDashing = true;
-                StartCoroutine(StartDash()); // Begin dash coroutine
-            }
+            bool canDash =
+                !isDashing &&                           // not currently dashing
+                (!dashOnCooldown ||                     // not cooling down
+                (!move.isGrounded && !dashUsedInAir));  // OR in air but hasn’t dashed yet
+
+            if (canDash)
+                StartCoroutine(StartDash());
+        }
+
+        // Reset air dash when touching ground
+        if (move.isGrounded && dashUsedInAir)
+        {
+            dashUsedInAir = false;
+            Debug.Log("Air dash reset on landing");
         }
     }
 
-    IEnumerator StartDash()
+    private IEnumerator StartDash()
     {
-        // Apply the speed boost from the dash
-        move.ApplyDash(dashSpeedBoost);
-        Debug.Log("Dashing...");
+        isDashing = true;
 
-        // Wait for the duration of the dash
+        // Determine dash direction (based on facing direction)
+        float dashDir = move.sprite.flipX ? 1f : -1f;
+
+        // Store original gravity
+        float originalGravity = rb.gravityScale;
+
+        // Temporarily disable gravity during dash
+        rb.gravityScale = 0f;
+
+        // Apply linear velocity for instant dash
+        rb.linearVelocity = new Vector2(dashDir * dashSpeedBoost, 0f);
+        Debug.Log("Dash started (" + (move.isGrounded ? "ground" : "air") + ")");
+
+        // Optional: Dash animation
+        Animator anim = move.GetComponent<Animator>();
+        if (anim != null)
+            anim.SetTrigger("dash");
+
+        // Wait for dash duration
         yield return new WaitForSeconds(dashDuration);
 
-        // Reset speed back to base value
-        move.ResetSpeed();
-        Debug.Log("Dash ended");
+        // Stop dash movement but keep Y velocity consistent
+        rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+        rb.gravityScale = originalGravity;
 
-        // Wait for cooldown before allowing another dash
-        yield return new WaitForSeconds(dashCooldown);
+        // Handle dash restrictions
+        if (move.isGrounded)
+        {
+            dashOnCooldown = true;
+            Debug.Log("Ground dash cooldown started");
+            yield return new WaitForSeconds(dashCooldown);
+            dashOnCooldown = false;
+            Debug.Log("Dash cooldown over");
+        }
+        else
+        {
+            dashUsedInAir = true;
+            Debug.Log("Air dash used — must land to reset");
+        }
 
         isDashing = false;
-        Debug.Log("Dash cooldown over");
     }
 }

@@ -11,11 +11,12 @@ GameObject:
   - component: {fileID: 6236347082044541919}
   - component: {fileID: 8328202040073762542}
   - component: {fileID: 1376003064569635804}
+  - component: {fileID: 92395189159094596}
   - component: {fileID: 8205676974666979243}
   - component: {fileID: 5683563214778219861}
   - component: {fileID: 8726324851320815472}
   m_Layer: 7
-  m_Name: Saw
+  m_Name: Void_Saw
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 15.89, y: 27.74, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 0.8424, y: 0.8424, z: 0.8424}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ca5ce7f3f3ac3bb499d37119b1867d7e, type: 3}
+  m_Sprite: {fileID: 8027963265076573511, guid: 5fe9a73326cbc2c4483ac02e2258db4b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -128,27 +129,53 @@ EdgeCollider2D:
   m_Offset: {x: 0, y: 0}
   m_EdgeRadius: 0
   m_Points:
-  - {x: 0.19339544, y: 0.008425694}
-  - {x: 0.19486164, y: -0.05560582}
-  - {x: 0.16832326, y: -0.1171674}
-  - {x: 0.12244582, y: -0.16783373}
-  - {x: 0.06580615, y: -0.19834368}
-  - {x: 0.04487967, y: -0.1977791}
-  - {x: -0.09733342, y: -0.18022244}
-  - {x: -0.154891, y: -0.14399855}
-  - {x: -0.20480679, y: -0.039536886}
-  - {x: -0.19220422, y: 0.08544546}
-  - {x: -0.11878942, y: 0.1736012}
-  - {x: -0.06448531, y: 0.20531182}
-  - {x: 0.039355278, y: 0.2075377}
-  - {x: 0.12463164, y: 0.1542564}
-  - {x: 0.15752529, y: 0.13627344}
-  - {x: 0.18016885, y: 0.09690243}
-  - {x: 0.19140428, y: 0.0028090472}
+  - {x: 0.9913346, y: 0.10447465}
+  - {x: 1.0149672, y: 0.01088874}
+  - {x: 1.0105929, y: -0.043284804}
+  - {x: 1.001658, y: -0.61852413}
+  - {x: 0.9671801, y: -1.1218864}
+  - {x: 0.35518837, y: -1.1139314}
+  - {x: -0.20816071, y: -1.0815964}
+  - {x: -0.59998953, y: -1.097245}
+  - {x: -0.8937226, y: -1.0305986}
+  - {x: -1.032255, y: -0.39957288}
+  - {x: -1.0396862, y: -0.017370522}
+  - {x: -1.0492512, y: 0.3883684}
+  - {x: -1.0497179, y: 0.6169013}
+  - {x: -1.0207791, y: 0.9538863}
+  - {x: -0.6703289, y: 1.0180271}
+  - {x: 0.00619933, y: 1.0502226}
+  - {x: 0.2757814, y: 0.9685368}
+  - {x: 0.47188276, y: 0.87831074}
+  - {x: 0.6451558, y: 0.8159996}
+  - {x: 0.7195156, y: 0.7101341}
+  - {x: 0.98195547, y: 0.13579817}
   m_AdjacentStartPoint: {x: 0, y: 0}
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!95 &92395189159094596
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583578117742307453}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aff0334e2b2b3474e9e1c387541cae11, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8205676974666979243
 MonoBehaviour:
   m_ObjectHideFlags: 0

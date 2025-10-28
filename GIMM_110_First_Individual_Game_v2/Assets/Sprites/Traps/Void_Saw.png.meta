@@ -1,13 +1,19 @@
 fileFormatVersion: 2
-guid: c1a75891dfff6cd41941716c3054538c
+guid: 5fe9a73326cbc2c4483ac02e2258db4b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5356574185940491189
-    second: Wall_0
+      213: 8027963265076573511
+    second: Void_Saw_0
   - first:
-      213: 7088962694465329434
-    second: Wall_1
+      213: 3421334728475206030
+    second: Void_Saw_1
+  - first:
+      213: 4713492355506401159
+    second: Void_Saw_2
+  - first:
+      213: 3962874882653988830
+    second: Void_Saw_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -55,7 +61,7 @@ TextureImporter:
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
-  spriteBorder: {x: 79, y: 13, z: 78, w: 43}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
@@ -103,13 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Wall_0
+      name: Void_Saw_0
       rect:
         serializedVersion: 2
-        x: 96
-        y: 26
-        width: 97
-        height: 505
+        x: 54
+        y: 54
+        width: 192
+        height: 206
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: b446df18820a9a5b0800000000000000
-      internalID: -5356574185940491189
+      spriteID: 74536cc3e0e096f60800000000000000
+      internalID: 8027963265076573511
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Wall_1
+      name: Void_Saw_1
       rect:
         serializedVersion: 2
-        x: 413
-        y: 111
-        width: 143
-        height: 420
+        x: 354
+        y: 35
+        width: 204
+        height: 211
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +146,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: a191a9df20e016260800000000000000
-      internalID: 7088962694465329434
+      spriteID: e81e87cfec50b7f20800000000000000
+      internalID: 3421334728475206030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Void_Saw_2
+      rect:
+        serializedVersion: 2
+        x: 633
+        y: 54
+        width: 213
+        height: 207
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 78f6a7df250b96140800000000000000
+      internalID: 4713492355506401159
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Void_Saw_3
+      rect:
+        serializedVersion: 2
+        x: 954
+        y: 54
+        width: 192
+        height: 192
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed7a8e5a5b5fef630800000000000000
+      internalID: 3962874882653988830
       vertices: []
       indices: 
       edges: []
@@ -150,20 +200,20 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    spriteID: 
+    internalID: 0
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries:
-      - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+      entries: []
     nameFileIdTable:
-      Wall_0: -5356574185940491189
-      Wall_1: 7088962694465329434
+      Void_Saw_0: 8027963265076573511
+      Void_Saw_1: 3421334728475206030
+      Void_Saw_2: 4713492355506401159
+      Void_Saw_3: 3962874882653988830
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

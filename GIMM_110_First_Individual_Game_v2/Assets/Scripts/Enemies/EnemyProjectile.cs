@@ -39,12 +39,21 @@ public class EnemyProjectile : DeathBox
 
     protected override void OnTriggerEnter2D(Collider2D collision)
     {
-        base.OnTriggerEnter2D(collision);
-
-        // Only reset when hitting something on valid layers
-        if (((1 << collision.gameObject.layer) & collisionLayers) != 0)
         {
-            ResetProjectile();
+            base.OnTriggerEnter2D(collision);
+
+            // Always reset if we hit the player
+            if (collision.CompareTag("Player"))
+            {
+                ResetProjectile();
+                return;
+            }
+
+            // Otherwise only reset on specific layers
+            if (((1 << collision.gameObject.layer) & collisionLayers) != 0)
+            {
+                ResetProjectile();
+            }
         }
     }
 

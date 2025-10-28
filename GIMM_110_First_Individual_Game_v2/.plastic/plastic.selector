@@ -1,4 +1,3 @@
 repository "GIMM_110_First_Individual_Game_v2/GIMM_110_First_Individual_Game_v2@20067515788953@cloud"
   path "/"
-    br "/main"
-    co "/main"
+    smartbranch "/main/Sam"

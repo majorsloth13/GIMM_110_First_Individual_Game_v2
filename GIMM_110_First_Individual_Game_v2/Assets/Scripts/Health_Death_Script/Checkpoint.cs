@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
@@ -26,5 +27,10 @@ public class Checkpoint : MonoBehaviour
         {
             Debug.LogWarning("[Checkpoint] Player triggered checkpoint but has no RespawnManager in its hierarchy!");
         }
+
+        /*if (collision.CompareTag("Checkpoint"))
+        {
+            
+        }*/
     }
 }

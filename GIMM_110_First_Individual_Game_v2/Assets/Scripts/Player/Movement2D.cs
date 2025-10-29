@@ -35,45 +35,52 @@ public class Movement2D : MonoBehaviour
 
 
     [Header("Jump Settings")]
-    public int extraJumps = 1;
-    private int jumpsLeft;
+    public int extraJumps = 1;           // Number of mid-air jumps allowed
+    private int jumpsLeft;               // Tracks remaining available jumps
 
     [Header("Wall Jump Settings")]
-    public float wallCheckDistance = 1f;
-    public float wallSlideSpeed = 2f;
-    public float wallJumpForce = 15f;
-    public float wallJumpPush = 10f;
+    public float wallCheckDistance = 1f; // How far to check from the player to detect walls
+    public float wallSlideSpeed = 2f;    // Max speed when sliding down a wall
+    public float wallJumpForce = 15f;    // Vertical force when wall jumping
+    public float wallJumpPush = 10f;     // Lateral push force when wall jumping
     public float wallJumpLockTime = 0.15f; // Prevents instant re-stick
 
     [Header("References")]
-    public Transform wallCheck;
-    public LayerMask wallLayer;
+    public Transform wallCheck;          // Determines which layers are considered walls
+    public LayerMask wallLayer;          // Determines which layers are considered walls
 
     [Header("Animation")]
-    [SerializeField] private Animator animator;
+    [SerializeField] private Animator animator; // Reference to player Animator for animation control
 
+    // Wall state flags
     private bool isTouchingWall;
     private bool isTouchingLeftWall;
     private bool isTouchingRightWall;
     private bool isWallSliding;
     private bool wallJumping;
-    private bool wasTouchingWall; // tracks if we were on a wall last frame
-    private float wallJumpLockCounter;
+    private bool wasTouchingWall;        // Tracks if player was on a wall during the previous frame
+    private float wallJumpLockCounter;   // Prevents immediate reattachment to walls
+
 
     private void Start()
     {
+        // Ensure animator is assigned
         if (animator == null)
             animator = GetComponent<Animator>();
 
+        // Cache Rigidbody and set physics properties
         rb = GetComponent<Rigidbody2D>();
         baseMoveSpeed = moveSpeed; // Store initial move speed for reset purposes
 
-        // Improves physics smoothing and collision accuracy
-        rb.interpolation = RigidbodyInterpolation2D.Interpolate;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        
+        rb.interpolation = RigidbodyInterpolation2D.Interpolate;           // Smooths motion between frames
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;   // Improves collision accuracy
+
 
         // Automatically get the SpriteRenderer if not set
         sprite = GetComponent<SpriteRenderer>();
+
+        // Initialize jump count
         jumpsLeft = extraJumps;
     }
 
@@ -83,24 +90,32 @@ public class Movement2D : MonoBehaviour
         // Read horizontal input each frame (-1 for left, 1 for right)
         movement = Input.GetAxisRaw("Horizontal");
 
-        // Flip sprite based on direction
+        // Flip sprite based on direction of movement
         UpdateSpriteDirection();
 
         // Check whether player is on the ground
         isGrounded = groundCheck.IsGrounded();
 
+        // Control running animation
         HandleRunAnimation();
 
+        // Reset jumps when grounded
         if (isGrounded)
             jumpsLeft = extraJumps;
 
+        // Detect wall side (left/right) for wall jump handling
         WallSide side = GetWallJump();
+
+        // Handle wall sliding and wall jumping
         if (side != WallSide.None && !isGrounded && !jumpBuffering)
         {
             print("wall sliding");
             moveSpeed = 0f;
+
+            // Limit downward velocity while sliding
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, Mathf.Clamp(rb.linearVelocity.y, -wallSlideSpeed, float.MaxValue));
 
+            // Wall jump logic
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 int preDirection = 0;
@@ -109,18 +124,22 @@ public class Movement2D : MonoBehaviour
                 else
                     preDirection = -1;
 
+                // Only wall jump if pressing toward the opposite wall
                 if (movement == preDirection && movement != 0f)
                 {
                     print("jump to other wall");
                     StartCoroutine(JumpBuffer());
                     rb.linearVelocityY = 0f;
+
+                    // Apply upward jump impulse
                     rb.AddForce(wallJumpPush /** (side == WallSide.Left ? Vector2.right : Vector2.left)*/ * Vector2.up, ForceMode2D.Impulse);
 
-                    // Face away from wall
+                    // Flip sprite away from wall after jumping
                     sprite.flipX = preDirection != 1;
                 }
             }
         }
+        // Regular jump logic
         else if (Input.GetKeyDown(KeyCode.Space) && jumpsLeft > 0 && !jumpBuffering)
         {
             StartCoroutine(JumpBuffer());
@@ -133,10 +152,11 @@ public class Movement2D : MonoBehaviour
             animator.SetTrigger("jump");
         }
         else
-        { 
+        {
+            // Restore default move speed when not wall sliding
             moveSpeed = baseMoveSpeed;
 
-            // Detect if player just left a wall
+            // Check if player just left a wall (to reset jumps)
             bool currentlyTouchingWall = (side != WallSide.None);
 
             // If we were touching a wall last frame but aren't anymore → reset double jumps
@@ -206,6 +226,7 @@ public class Movement2D : MonoBehaviour
         moveSpeed = baseMoveSpeed;
     }
 
+    // Detect which wall (if any) the player is touching
     WallSide GetWallJump()
     {
         WallSide side = WallSide.None;
@@ -216,12 +237,14 @@ public class Movement2D : MonoBehaviour
         else
             side = WallSide.None;
 
+        // Draw debug rays to visualize wall detection
         Debug.DrawRay(wallCheck.position, Vector2.left * wallCheckDistance, side == WallSide.Left ? Color.green : Color.red);
         Debug.DrawRay(wallCheck.position, Vector2.right * wallCheckDistance, side == WallSide.Right ? Color.green : Color.red);
 
         return side;
     }
 
+    // Prevents repeated jumps for a short period (used for timing control)
     IEnumerator JumpBuffer()
     {
         jumpBuffering = true;
@@ -229,6 +252,7 @@ public class Movement2D : MonoBehaviour
         jumpBuffering = false;
     }
 
+    // Handles running animation state based on movement
     private void HandleRunAnimation()
     {
         if (animator == null) return;

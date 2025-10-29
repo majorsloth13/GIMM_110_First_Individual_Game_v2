@@ -1204,7 +1204,7 @@ Transform:
   m_GameObject: {fileID: 389734755}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -5.76, y: -3.04, z: 0}
+  m_LocalPosition: {x: -28.25, y: -8.58, z: 0}
   m_LocalScale: {x: 0.97402644, y: 0.860933, z: 1.7791}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1225,7 +1225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57003c9d6042f2f40a5f98bb92406a87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 8
   jumpForce: 18
   coyoteTime: 0.2
   jumpBufferTime: 0.2
@@ -1412,19 +1412,11 @@ MonoBehaviour:
   comment: 'Issues:
 
 
-    Death animation plays then transitions into respawn animation,
-    but resets into death animation briefly then continues respawn animation.
+    Flickering during the end of player walk animation.
 
 
-    Flickering
-    during the end of player walk animation.
-
-
-    Potential Fixes:
-
-
-    Make death
-    animation a bool instead of a trigger.
+    Potential
+    Fixes:
 
 
 '
@@ -2464,11 +2456,6 @@ Transform:
   - {fileID: 372030890}
   m_Father: {fileID: 1572080124}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &809489621 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5223704789706306046, guid: 4e05ab6372886d04e8361d66763a6c5a, type: 3}
-  m_PrefabInstance: {fileID: 8284637459026941712}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &812351720
 GameObject:
   m_ObjectHideFlags: 0
@@ -2937,7 +2924,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c72fe2c4f20f84d499e7ad3778380e5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coin: {fileID: 809489621}
 --- !u!4 &1116715877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6627354160996353976, guid: 04947a6971f86544392be5485fc1be1d, type: 3}

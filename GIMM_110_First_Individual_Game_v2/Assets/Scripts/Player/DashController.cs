@@ -23,7 +23,7 @@ public class DashController : MonoBehaviour
     private void Update()
     {
         // Input for dash (Right Mouse Button)
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
         {
             bool canDash =
                 !isDashing &&                           // not currently dashing

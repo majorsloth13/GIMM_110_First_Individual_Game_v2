@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework;
+using UnityEngine;
 
 public class PlatformManager : MonoBehaviour
 {
@@ -8,9 +9,9 @@ public class PlatformManager : MonoBehaviour
     GameObject currentPlatform;
     int index = -1; // Index of the current platform
     int previousIndex = -1; // Prevents the same platform from being selected twice in a row
-
+    
     // GameObject for coin appearing above platform
-    public GameObject coin;
+    //public GameObject coin;
     #endregion
 
     #region Unity Methods
@@ -44,7 +45,7 @@ public class PlatformManager : MonoBehaviour
         previousIndex = index; // sets the previous index to the current index
 
         currentPlatform = platforms[index]; // registers random platform as the one the player must get to
-        coin.transform.position = new Vector2(currentPlatform.transform.position.x, currentPlatform.transform.position.y + 2f);
+        //coin.transform.position = new Vector2(currentPlatform.transform.position.x, currentPlatform.transform.position.y + 2f);
     }
     #endregion
 }

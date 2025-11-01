@@ -2693,7 +2693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03e40f54e9e4ed742b123f37082aacde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: IntroScene
+  nextSceneName: StartScreen
   transitionDelay: 0.5
   fadeOnTransition: 0
 --- !u!95 &909881016
@@ -6316,7 +6316,6 @@ GameObject:
   - component: {fileID: 2036780560}
   - component: {fileID: 2036780559}
   - component: {fileID: 2036780558}
-  - component: {fileID: 2036780557}
   - component: {fileID: 2036780556}
   m_Layer: 6
   m_Name: Player Hold
@@ -6374,36 +6373,6 @@ MonoBehaviour:
 
 
 '
---- !u!114 &2036780557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2036780554}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9149ba74e1c38f346a3325b250209e86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  jumpForce: 18
-  coyoteTime: 0.2
-  jumpBufferTime: 0.2
-  groundCheck: {fileID: 1937794995}
-  sprite: {fileID: 0}
-  rb: {fileID: 0}
-  extraJumps: 1
-  wallCheckDistance: 0.6
-  wallSlideSpeed: 2
-  wallJumpForce: 15
-  wallJumpPush: 10
-  wallJumpLockTime: 0.15
-  wallCheck: {fileID: 994722960}
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  animator: {fileID: 0}
 --- !u!114 &2036780558
 MonoBehaviour:
   m_ObjectHideFlags: 0

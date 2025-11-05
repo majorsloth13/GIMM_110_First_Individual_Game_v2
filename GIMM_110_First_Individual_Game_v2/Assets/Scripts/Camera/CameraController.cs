@@ -12,6 +12,10 @@ public class CameraController : MonoBehaviour
 
     [Header("Zoom")]
     [SerializeField] private float cameraDistance = 8f; // Orthographic camera zoom distance
+    [SerializeField] private float startZoom = 15f;     // Starting zoomed-out size
+    [SerializeField] private float targetZoom = 8f;     // Final zoom size
+    [SerializeField] private float zoomSpeed = 1f;      // How fast to zoom back in
+    private bool zoomingIn = true;
     private Camera cam;
 
     private void Start()
@@ -20,12 +24,11 @@ public class CameraController : MonoBehaviour
         if (cam == null)
         {
             Debug.LogError("CameraController: No Camera component found!");
+            return;
         }
-        else
-        {
-            cam.orthographic = true;
-            cam.orthographicSize = cameraDistance;
-        }
+
+        cam.orthographic = true;
+        cam.orthographicSize = startZoom;
     }
 
     private void Update()
@@ -47,12 +50,20 @@ public class CameraController : MonoBehaviour
 
         transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * cameraSpeed);
 
-        // Allow runtime zoom
-        if (cam != null)
-            cam.orthographicSize = cameraDistance;
+        
+        if (zoomingIn)
+        {
+            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetZoom, Time.deltaTime * zoomSpeed);
+
+            if (Mathf.Abs(cam.orthographicSize - targetZoom) < 0.05f)
+            {
+                cam.orthographicSize = targetZoom;
+                zoomingIn = false; // Stop zooming once target reached
+            }
+        }
     }
 
-    public void MoveToNewRoom(Transform newRoom)
+public void MoveToNewRoom(Transform newRoom)
     {
         transform.position = new Vector3(newRoom.position.x, newRoom.position.y, transform.position.z);
     }

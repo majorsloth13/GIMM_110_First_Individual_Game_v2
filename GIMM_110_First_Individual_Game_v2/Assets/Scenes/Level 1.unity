@@ -1726,6 +1726,9 @@ MonoBehaviour:
   upDistance: 1
   cameraSpeed: 2
   cameraDistance: 8
+  startZoom: 30
+  targetZoom: 10
+  zoomSpeed: 0.5
 --- !u!114 &519420034
 MonoBehaviour:
   m_ObjectHideFlags: 0

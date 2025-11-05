@@ -35,7 +35,7 @@ public class Movement2D : MonoBehaviour
 
 
     [Header("Jump Settings")]
-    public int extraJumps = 1;           // Number of mid-air jumps allowed
+    public int extraJumps = 2;           // Number of mid-air jumps allowed
     private int jumpsLeft;               // Tracks remaining available jumps
 
     [Header("Wall Jump Settings")]

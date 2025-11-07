@@ -1,13 +1,37 @@
 fileFormatVersion: 2
-guid: 55b1ad91229e8524e8044fbf6143978d
+guid: 3e9b4bd4b2eddb948bd1e9d584433601
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7408791951343775973
-    second: Character_Idle_0
+      213: -2397420841921480192
+    second: Character_Jump2_0
   - first:
-      213: 1993866322318172352
-    second: Character_Idle_1
+      213: 4810006527787562272
+    second: Character_Jump2_1
+  - first:
+      213: -8630630623506343698
+    second: Character_Jump2_2
+  - first:
+      213: 4249507752835342372
+    second: Character_Jump2_3
+  - first:
+      213: -2006144102554132249
+    second: Character_Jump2_4
+  - first:
+      213: 8674091540910066564
+    second: Character_Jump2_5
+  - first:
+      213: 8003481837827781750
+    second: Character_Jump2_6
+  - first:
+      213: -8017693204288428060
+    second: Character_Jump2_7
+  - first:
+      213: -2373575627142176689
+    second: Character_Jump2_8
+  - first:
+      213: -7350774982011295136
+    second: Character_Jump2_9
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -40,7 +64,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -103,45 +127,45 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Character_Idle_0
+      name: Character_Jump2_0
       rect:
         serializedVersion: 2
-        x: 70
-        y: 50
-        width: 150
-        height: 162
+        x: 66
+        y: 69
+        width: 160
+        height: 222
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5e07e9ab60151d660800000000000000
-      internalID: 7408791951343775973
+      spriteID: 00af6244276aabed0800000000000000
+      internalID: -2397420841921480192
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Character_Idle_1
+      name: Character_Jump2_1
       rect:
         serializedVersion: 2
-        x: 366
-        y: 50
-        width: 141
-        height: 162
+        x: 365
+        y: 164
+        width: 150
+        height: 200
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 0c0a36f2bd2abab10800000000000000
-      internalID: 1993866322318172352
+      spriteID: 0257618d37390c240800000000000000
+      internalID: 4810006527787562272
       vertices: []
       indices: 
       edges: []
@@ -150,7 +174,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 02ee340dba3d2e7419ca266c0fccea4c
     internalID: 0
     vertices: []
     indices: 
@@ -160,8 +184,16 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Character_Idle_0: 7408791951343775973
-      Character_Idle_1: 1993866322318172352
+      Character_Jump2_0: -2397420841921480192
+      Character_Jump2_1: 4810006527787562272
+      Character_Jump2_2: -8630630623506343698
+      Character_Jump2_3: 4249507752835342372
+      Character_Jump2_4: -2006144102554132249
+      Character_Jump2_5: 8674091540910066564
+      Character_Jump2_6: 8003481837827781750
+      Character_Jump2_7: -8017693204288428060
+      Character_Jump2_8: -2373575627142176689
+      Character_Jump2_9: -7350774982011295136
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

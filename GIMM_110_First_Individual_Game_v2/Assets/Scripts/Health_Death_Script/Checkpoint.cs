@@ -11,6 +11,13 @@ public class Checkpoint : MonoBehaviour
         // Only react to the player
         if (!collision.CompareTag("Player")) return;
 
+        // If already activated, skip
+        if (isActivated)
+         {
+             Debug.Log($"[Checkpoint] {name} already activated — skipping.");
+             return;
+         }
+
         // Look for the RespawnManager in both parent and child objects
         RespawnManager respawnManager = collision.GetComponentInParent<RespawnManager>();
         if (respawnManager == null)

@@ -34,6 +34,7 @@ public class RetractableSpike2D : EnemyDamage
     private Vector3 baseLocalPosition;                   // Starting local position of spike
     private Vector3 retractedLocalPosition;              // Fully retracted local position
     private Vector3 extendedLocalPosition;               // Fully extended local position
+    private bool canDamage = false;
 
     void Awake()
     {
@@ -56,9 +57,11 @@ public class RetractableSpike2D : EnemyDamage
         retractedLocalPosition = baseLocalPosition - dir * retractedOffset;
         extendedLocalPosition = baseLocalPosition + dir * extendedOffset;
 
-        // Start spike in retracted position with damage disabled
         spikeTransform.localPosition = retractedLocalPosition;
-        if (damageCollider) damageCollider.enabled = false;
+
+        // Always enable the collider so collisions are detected
+        if (damageCollider)
+            damageCollider.enabled = true;
     }
 
     void Start()
@@ -92,7 +95,7 @@ public class RetractableSpike2D : EnemyDamage
         spikeTransform.localPosition = retractedLocalPosition;
 
         // Disable collider
-        if (damageCollider) damageCollider.enabled = false;
+        //if (damageCollider) damageCollider.enabled = false;
     }
 
     /// <summary>
@@ -110,33 +113,32 @@ public class RetractableSpike2D : EnemyDamage
     /// <summary>
     /// Executes a single spike extend-hold-retract cycle.
     /// </summary>
-    private IEnumerator OneCycle()
-    {
-        // Optionally enable damage during travel
-        if (enableColliderDuringTravel && damageCollider)
-            damageCollider.enabled = true;
+private IEnumerator OneCycle()
+{
+    // Spike starts retracted — safe
+    canDamage = false;
 
-        // Move spike to extended position
-        yield return MoveSpike(spikeTransform.localPosition, extendedLocalPosition, extendDuration);
+    // Extend
+    if (enableColliderDuringTravel)
+        canDamage = true;
 
-        // Ensure damage is enabled while holding
-        if (damageCollider)
-            damageCollider.enabled = true;
+    yield return MoveSpike(spikeTransform.localPosition, extendedLocalPosition, extendDuration);
 
-        // Wait at full extension
-        yield return new WaitForSeconds(holdDuration);
+    // Fully extended — deal damage
+    canDamage = true;
 
-        // Optionally disable damage during retraction
-        if (!enableColliderDuringTravel && damageCollider)
-            damageCollider.enabled = false;
+    yield return new WaitForSeconds(holdDuration);
 
-        // Move spike back to retracted position
-        yield return MoveSpike(spikeTransform.localPosition, retractedLocalPosition, retractDuration);
+    // Retract — stop damaging
+    if (!enableColliderDuringTravel)
+        canDamage = false;
 
-        // Fully disable damage after retraction
-        if (damageCollider)
-            damageCollider.enabled = false;
-    }
+    yield return MoveSpike(spikeTransform.localPosition, retractedLocalPosition, retractDuration);
+
+    // Retracted — safe again
+    canDamage = false;
+}
+
 
     /// <summary>
     /// Smoothly moves the spike from one position to another over time.

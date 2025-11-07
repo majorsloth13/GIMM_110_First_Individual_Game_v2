@@ -12,6 +12,8 @@ public class MatterPickup : MonoBehaviour
     // Option A: add a specific Matter-derived component on the prefab (recommended)
     // Option B: create it here (we create DarkMatter by default).
     private Matter matterData;
+    public float zoomAmount = 3f;
+    public float zoomDuration = 0.6f;
 
     private void Awake()
     {
@@ -47,6 +49,13 @@ public class MatterPickup : MonoBehaviour
         ScoreCounter.matterAmount += matterData.GetValue();
 
         Debug.Log($"Collected {matterData.GetType().Name} (value {matterData.GetValue()}). Total: {ScoreCounter.matterAmount}");
+        
+        // Trigger camera zoom effect
+        CameraController camController = FindFirstObjectByType<CameraController>();
+        if (camController != null)
+        {
+            camController.ZoomEffect(zoomAmount, zoomDuration); // zoom out by 3 units over 0.6 seconds total
+        }
 
         // Destroy pickup gameobject
         Destroy(gameObject);

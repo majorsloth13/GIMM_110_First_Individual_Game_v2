@@ -1,9 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     [Header("Follow Player")]
-    [SerializeField] private Transform player;      // Player to follow
+    [SerializeField] private Transform player;         // Player to follow
     [SerializeField] private float aheadDistance = 2f; // How far ahead the camera looks horizontally
     [SerializeField] private float upDistance = 1f;    // How far ahead the camera looks vertically
     [SerializeField] private float cameraSpeed = 3f;   // How quickly camera follows
@@ -66,5 +67,40 @@ public class CameraController : MonoBehaviour
 public void MoveToNewRoom(Transform newRoom)
     {
         transform.position = new Vector3(newRoom.position.x, newRoom.position.y, transform.position.z);
+    }
+
+    public void ZoomEffect(float zoomOutAmount, float zoomDuration, float holdTime = 1.5f)
+    {
+        StopAllCoroutines(); // stop any current zooming coroutine
+        StartCoroutine(ZoomRoutine(zoomOutAmount, zoomDuration, holdTime));
+    }
+
+    private System.Collections.IEnumerator ZoomRoutine(float zoomOutAmount, float zoomDuration, float holdTime = 1.5f)
+    {
+        float originalZoom = cam.orthographicSize;
+        float targetOutZoom = originalZoom + zoomOutAmount;
+
+        // Zoom out
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / (zoomDuration / 2);
+            cam.orthographicSize = Mathf.Lerp(originalZoom, targetOutZoom, t);
+            yield return null;
+        }
+
+        //Hold at zoomed out distance
+        yield return new WaitForSeconds(holdTime); // Adjust this to control how long it stays zoomed out
+
+        // Zoom back in
+        t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / (zoomDuration / 2);
+            cam.orthographicSize = Mathf.Lerp(targetOutZoom, originalZoom, t);
+            yield return null;
+        }
+
+        cam.orthographicSize = originalZoom; // ensure final value
     }
 }

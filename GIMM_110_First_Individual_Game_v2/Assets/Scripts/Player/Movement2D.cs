@@ -143,8 +143,8 @@ public class Movement2D : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space) && jumpsLeft > 0 && !jumpBuffering)
         {
             StartCoroutine(JumpBuffer());
-            print("jump reg");
             moveSpeed = baseMoveSpeed;
+            rb.linearVelocityY = 0f;
             rb.AddForce(jumpForce * Vector2.up, ForceMode2D.Impulse);
             jumpsLeft--;
 
@@ -264,5 +264,4 @@ public class Movement2D : MonoBehaviour
         Debug.Log("run: " + run);
 
     }
-
 }

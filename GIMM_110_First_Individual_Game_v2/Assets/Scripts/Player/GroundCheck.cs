@@ -55,9 +55,9 @@ public class GroundCheck : MonoBehaviour
 
     private void Update()
     {
-        IsGrounded(); // Calls the CheckGround method every frame to constantly check if the player is grounded.
+        print(IsGrounded()); // Calls the CheckGround method every frame to constantly check if the player is grounded.
     }
-#endregion
+    #endregion
 
     #region Custom Methods
     /// <summary>
@@ -73,7 +73,7 @@ public class GroundCheck : MonoBehaviour
         /* CircleCast is a 2D sphere cast that checks for colliders in a circular area.
             RaycastHit2D is a struct that stores information about the raycast hit. 
             Raycasts are basically invisible rays that are used to detect objects in the scene. */
-        RaycastHit2D hit = Physics2D.CircleCast(origin, radius, direction, distance, groundLayers);
+        RaycastHit2D hit = Physics2D.CircleCast(origin, checkRadius, direction, distance, groundLayers);
 
         // If the raycast hits a collider, the player is grounded. Otherwise, the player is not grounded.
         if (hit.collider != null)
@@ -86,5 +86,12 @@ public class GroundCheck : MonoBehaviour
         }
     }
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+        Gizmos.DrawSphere(transform.position, checkRadius);
+    }
 }
 

@@ -6,6 +6,7 @@ public class RespawnManager : MonoBehaviour
     [Header("Player References")]
     public Transform player;                     // Reference to the player
     private Vector3 spawnPoint;                  // Player's respawn position
+    private Transform activeCheckpoint; // Tracks the checkpoint's Transform if it moves
     private Health playerHealth;                 // Reference to player's Health component
 
     [Header("Settings")]
@@ -30,11 +31,28 @@ public class RespawnManager : MonoBehaviour
     /// <summary>
     /// Called by checkpoint objects to update the player's respawn point.
     /// </summary>
+    /* public void SetSpawnPoint(Vector3 newSpawnPoint)
+     {
+         spawnPoint = newSpawnPoint;
+         Debug.Log("New checkpoint set at: " + spawnPoint);
+     }*/
     public void SetSpawnPoint(Vector3 newSpawnPoint)
     {
         spawnPoint = newSpawnPoint;
-        Debug.Log("New checkpoint set at: " + spawnPoint);
+        activeCheckpoint = null; // clear dynamic reference
+        Debug.Log($"[RespawnManager] Static checkpoint set at {spawnPoint}");
     }
+
+    // Overload for checkpoints on moving platforms
+    public void SetSpawnPoint(Transform checkpointTransform)
+    {
+        if (checkpointTransform == null) return;
+
+        activeCheckpoint = checkpointTransform;
+        spawnPoint = checkpointTransform.position; // fallback
+        Debug.Log($"[RespawnManager] Following moving checkpoint '{checkpointTransform.name}'");
+    }
+
 
     /// <summary>
     /// Called externally when player dies or hits a death zone.
@@ -49,7 +67,14 @@ public class RespawnManager : MonoBehaviour
         yield return new WaitForSeconds(respawnDelay);
 
         // Move player to saved checkpoint
-        player.position = spawnPoint;
+        //player.position = spawnPoint;
+
+        // Use dynamic checkpoint position if available
+        Vector3 respawnPos = activeCheckpoint != null ? activeCheckpoint.position : spawnPoint;
+        player.position = respawnPos + Vector3.up * 0.5f; // offset slightly above platform
+        Debug.Log($"[RespawnManager] Respawning at {(activeCheckpoint ? activeCheckpoint.position : spawnPoint)}");
+
+
 
         // Reset health if applicable
         if (playerHealth != null)

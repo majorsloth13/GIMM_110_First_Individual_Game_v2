@@ -24,16 +24,26 @@ public class Checkpoint : MonoBehaviour
             respawnManager = collision.GetComponentInChildren<RespawnManager>();
 
         // If found, update checkpoint
-        if (respawnManager != null)
+        /* if (respawnManager != null)
+         {
+             respawnManager.SetSpawnPoint(transform.position);
+             isActivated = true;
+             Debug.Log($"[Checkpoint] Triggered at {transform.position}");
+         }
+         else
+         {
+             Debug.LogWarning("[Checkpoint] Player triggered checkpoint but has no RespawnManager in its hierarchy!");
+         }*/
+        if (transform.parent != null && transform.parent.GetComponent<MovingPlatforms>() != null)
         {
-            respawnManager.SetSpawnPoint(transform.position);
-            isActivated = true;
-            Debug.Log($"[Checkpoint] Triggered at {transform.position}");
+            respawnManager.SetSpawnPoint(transform); // moving checkpoint
         }
         else
         {
-            Debug.LogWarning("[Checkpoint] Player triggered checkpoint but has no RespawnManager in its hierarchy!");
+            respawnManager.SetSpawnPoint(transform.position); // static
         }
+
+
 
         /*if (collision.CompareTag("Checkpoint"))
         {

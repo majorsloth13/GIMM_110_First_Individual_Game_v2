@@ -34,7 +34,7 @@ public class RetractableSpike2D : EnemyDamage
     private Vector3 baseLocalPosition;                   // Starting local position of spike
     private Vector3 retractedLocalPosition;              // Fully retracted local position
     private Vector3 extendedLocalPosition;               // Fully extended local position
-    private bool canDamage = false;
+    public bool canDamage = false;
 
     void Awake()
     {

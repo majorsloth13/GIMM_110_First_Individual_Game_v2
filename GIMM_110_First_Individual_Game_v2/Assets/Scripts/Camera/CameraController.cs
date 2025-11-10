@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour
     private float lookUp;
 
     [Header("Zoom")]
-    [SerializeField] private float cameraDistance = 8f; // Orthographic camera zoom distance
+    //[SerializeField] private float cameraDistance = 8f; // Orthographic camera zoom distance
     [SerializeField] private float startZoom = 15f;     // Starting zoomed-out size
     [SerializeField] private float targetZoom = 8f;     // Final zoom size
     [SerializeField] private float zoomSpeed = 1f;      // How fast to zoom back in

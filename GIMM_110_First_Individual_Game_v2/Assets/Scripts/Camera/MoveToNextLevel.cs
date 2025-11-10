@@ -67,6 +67,9 @@ public class MoveToNextLevel : MonoBehaviour
             Debug.Log("Fade effect would start here...");
         }
 
+        // Reset the static score counter
+        ScoreCounter.matterAmount = 0;
+
         // Load the next scene
         if (!string.IsNullOrEmpty(nextSceneName))
         {

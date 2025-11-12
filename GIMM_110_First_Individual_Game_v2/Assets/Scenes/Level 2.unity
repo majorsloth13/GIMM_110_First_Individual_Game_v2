@@ -342,9 +342,9 @@ MonoBehaviour:
   aheadDistance: 3
   upDistance: 1
   cameraSpeed: 2
-  startZoom: 15
-  targetZoom: 8
-  zoomSpeed: 1
+  startZoom: 30
+  targetZoom: 10
+  zoomSpeed: 1.07
 --- !u!81 &14147449
 AudioListener:
   m_ObjectHideFlags: 0
@@ -16132,7 +16132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e5649ecee6d5ef4a9d16fce64d573fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkRadius: 0.75
+  checkRadius: 0.82
   checkDistance: {x: 0, y: 0}
   groundLayers:
     serializedVersion: 2

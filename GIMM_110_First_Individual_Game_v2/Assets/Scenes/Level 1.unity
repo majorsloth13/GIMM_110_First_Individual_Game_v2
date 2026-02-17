@@ -2925,10 +2925,9 @@ GameObject:
   - component: {fileID: 389734760}
   - component: {fileID: 389734759}
   - component: {fileID: 389734762}
-  - component: {fileID: 389734758}
+  - component: {fileID: 389734769}
   - component: {fileID: 389734761}
   - component: {fileID: 389734764}
-  - component: {fileID: 389734767}
   - component: {fileID: 389734768}
   m_Layer: 6
   m_Name: Player Hold
@@ -3010,36 +3009,6 @@ Transform:
   - {fileID: 191880130}
   m_Father: {fileID: 1581880339}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &389734758
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 389734755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57003c9d6042f2f40a5f98bb92406a87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 8
-  jumpForce: 18
-  coyoteTime: 0.2
-  jumpBufferTime: 0.2
-  groundCheck: {fileID: 698299621}
-  sprite: {fileID: 389734756}
-  rb: {fileID: 389734760}
-  extraJumps: 1
-  wallCheckDistance: 0.6
-  wallSlideSpeed: 2
-  wallJumpForce: 15
-  wallJumpPush: 15
-  wallJumpLockTime: 0.25
-  wallCheck: {fileID: 1282423071}
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  animator: {fileID: 389734762}
 --- !u!61 &389734759
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3164,36 +3133,6 @@ MonoBehaviour:
   dashSpeedBoost: 30
   dashDuration: 0.3
   dashCooldown: 3
---- !u!114 &389734767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 389734755}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9149ba74e1c38f346a3325b250209e86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  jumpForce: 18
-  coyoteTime: 0.2
-  jumpBufferTime: 0.2
-  groundCheck: {fileID: 698299621}
-  sprite: {fileID: 0}
-  rb: {fileID: 0}
-  extraJumps: 1
-  wallCheckDistance: 0.6
-  wallSlideSpeed: 2
-  wallJumpForce: 15
-  wallJumpPush: 10
-  wallJumpLockTime: 0.15
-  wallCheck: {fileID: 1282423071}
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  animator: {fileID: 0}
 --- !u!114 &389734768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3217,6 +3156,32 @@ MonoBehaviour:
 
 
 '
+--- !u!114 &389734769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 389734755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08fc7cfb6f6372d4e8a6f9564df52780, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  verticalSpeed: 10
+  horizontalSpeed: 10
+  jumpForce: 12
+  airMoveSpeed: 8
+  movementFps: 12
+  GroundCheck: {fileID: 698299621}
+  WallCheck: {fileID: 1282423072}
+  Rb: {fileID: 389734760}
+  coyoteTime: 0.12
+  jumpBufferTime: 0.12
+  audioSource: {fileID: 0}
+  deathSoundClip: {fileID: 0}
+  HasDoubleJump: 1
+  isIdle: 0
 --- !u!4 &389928104 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1557118924873089474, guid: b6545458fbe0db643bebeee73b1f88d3, type: 3}

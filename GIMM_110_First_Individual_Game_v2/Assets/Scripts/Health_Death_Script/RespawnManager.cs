@@ -62,7 +62,7 @@ public class RespawnManager : MonoBehaviour
         StartCoroutine(RespawnCoroutine());
     }
 
-    private IEnumerator RespawnCoroutine()
+    public IEnumerator RespawnCoroutine()
     {
         yield return new WaitForSeconds(respawnDelay);
 
